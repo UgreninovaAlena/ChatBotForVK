@@ -1,0 +1,8 @@
+Cсылка на задание:
+https://github.com/netology-code/py-advanced-diplom/tree/new_diplom
+
+Ссылка на репозиторий на GitHub:
+https://github.com/UgreninovaAlena/Modul2_Diplom.git
+
+Команда для заполнения requirements.txt:
+pip freeze > requirements.txt
