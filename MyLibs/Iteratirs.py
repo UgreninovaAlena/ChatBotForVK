@@ -1,5 +1,5 @@
-from MyLibs.ForDatabase import Session, datinguser
-from MyLibs.LibAdditionalFunction import find_max_size
+from mylibs.for_database import Session, datinguser
+from mylibs.addit_func import find_max_size
 
 
 class GetlinkForPhotos():
@@ -14,7 +14,7 @@ class GetlinkForPhotos():
     def __iter__(self):
         return self
 
-    def find_list (self):
+    def find_list(self):
         if len(self.list_photos_link) < 3:
             self.result_list = self.list_photos_link
         else:

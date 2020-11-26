@@ -2,9 +2,9 @@ import random
 from vk_api import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-import MyLibs.ForDatabase as MyDB
-import MyLibs.ForVK as MyVK
-from MyLibs.LibAdditionalFunction import get_input_data
+import mylibs.for_database as MyDB
+import mylibs.for_vk as MyVK
+from mylibs.addit_func import get_input_data
 
 
 class SM:
@@ -22,6 +22,11 @@ class SM:
         'all_person_is_viewed': 'Вау! Ты просмотрели всех возможных кондидатов!\n Заходи ко мне позже, и я поищу для тебя еще :)',
         'search_started': 'Минутку, уже ищу...'}
 
+    def __init__(self, vk, curent_status, AOuthData):
+        self.vk = vk
+        self.change_current_status(curent_status)
+        self.AOuthData = AOuthData
+
     def update_massage(self, event):
         self.event = event
         self.request = self.event.text.replace(' ', '').lower()
@@ -34,64 +39,60 @@ class SM:
             if additional_message != None:
                 MyVK.write_msg(self.vk, self.event.user_id, additional_message)
 
-    def __init__(self, vk, curent_status, AOuthData):
-        self.vk = vk
-        self.change_current_status(curent_status)
-        self.AOuthData = AOuthData
 
-    def _repeat_input(self):
+    def act_repeat_input(self):
         MyVK.write_msg(self.vk, self.event.user_id, self.message_dict['repeat_input'])
         self.change_current_status(self.current_status)
 
-    def _start(self):
+    def act_start(self):
         if self.request == "start" or self.request == 'hi':
             self.change_current_status('input_token')
 
         elif self.request == 'by':
-            self._stop()
+            self.act_stop()
 
         else:
             self._repeat_input()
 
-    def _stop(self, additional_message = None):
+    def act_stop(self, additional_message = None):
         self.change_current_status('stop', additional_message)
 
-    def _input_token(self):
+    def act_input_token(self):
         if self.request.find('token=') != -1:
             self.token = self.request[6:]
             self.change_current_status('input_age_from')
 
         elif self.request == 'by':
-            self._stop()
+            self.act_stop()
 
         else:
             self._repeat_input()
 
-    def _input_age_from(self):
+    def act_input_age_from(self):
         if self.request.isdigit() == 1:
             self.age_from = int(self.request)
             self.change_current_status('input_age_to')
 
         elif self.request == 'by':
-            self._stop()
+            self.act_stop()
 
         else:
             self._repeat_input()
 
-    def _input_age_to(self):
+    def act_input_age_to(self):
         if self.request.isdigit() and self.age_from <= int(self.request):
             self.age_to = int(self.request)
             self.change_current_status('start_search')
 
         elif self.request == 'by':
-            self._stop()
+            self.act_stop()
 
         elif self.age_from > int(self.request):
             error_str = f'Вы ввели некорректный промежуток возраста. Попробуйте еще раз'
             MyVK.write_msg(self.vk, self.event.user_id, error_str)
             self.change_current_status('input_age_from')
 
-    def _start_search(self):
+    def act_start_search(self):
         if self.request == 'search':
             self.user = MyVK.User(self.event.user_id, self.token, self.age_from, self.age_to)
             result = self.user.get_infouser()
@@ -129,7 +130,7 @@ class SM:
         else:
             self._repeat_input()
 
-    def _send_set(self):
+    def act_send_set(self):
         if self.request == "go":
             self.current_person_index = self.current_person_index + 1
             MyVK.send_set(self.vk, self.event.user_id, self.person_list_for_chat[self.current_person_index])
@@ -162,27 +163,28 @@ class SM:
         else:
             self._repeat_input()
 
+
     def process_message(self):
         if self.current_status == 'start':
-            self._start()
+            self.act_start()
 
         elif self.current_status == 'input_token':
-            self._input_token()
+            self.act_input_token()
 
         elif self.current_status == 'input_age_from':
-            self._input_age_from()
+            self.act_input_age_from()
 
         elif self.current_status == 'input_age_to':
-            self._input_age_to()
+            self.act_input_age_to()
 
         elif self.current_status == 'start_search':
-            self._start_search()
+            self.act_start_search()
 
         elif self.current_status == 'send_set':
-            self._send_set()
+            self.act_send_set()
 
         else:
-            self._start()
+            self.act_start()
 
 
 def work(AOuthData):

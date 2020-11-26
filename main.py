@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
-from MyLibs.MS import work
-from MyLibs.LibAdditionalFunction import get_input_data
+from mylibs.ms import work
+from mylibs.addit_func import get_input_data
 
 if __name__ == '__main__':
 

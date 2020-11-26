@@ -2,8 +2,9 @@ import sqlalchemy as sql
 import psycopg2
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from MyLibs.ForLogs.Logger import get_log_to_file
-from MyLibs.ResultCreation import Result
+from mylibs.forlogs.Logger import get_log_to_file
+from mylibs.result_creation import Result
+
 
 DSN = 'postgres+psycopg2://test2:0****0@localhost:5432/test2'
 BASE = declarative_base()

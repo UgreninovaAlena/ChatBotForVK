@@ -1,9 +1,9 @@
 import vk_api
 import random
 from vk_api.longpoll import VkLongPoll, VkEventType
-from MyLibs import ForVK as mVK
-from MyLibs.ForDatabase import add_user_in_DataBase, BASE, engine, DB_search_person, DB_add_person
-from MyLibs.LibAdditionalFunction import get_input_data
+from mylibs import for_vk as mVK
+from mylibs.for_database import add_user_in_DataBase, BASE, engine, DB_search_person, DB_add_person
+from mylibs.addit_func import get_input_data
 
 
 class BOT():

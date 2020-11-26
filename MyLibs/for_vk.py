@@ -1,10 +1,10 @@
 import random
 import requests
 from urllib.parse import urlencode
-from MyLibs.Iteratirs import GetlinkForPhotos, ListIteration
-from MyLibs.LibAdditionalFunction import get_input_data
-from MyLibs.ForLogs.Logger import get_log_to_file
-from MyLibs.ResultCreation import catch_error
+from mylibs.iteratirs import GetlinkForPhotos, ListIteration
+from mylibs.addit_func import get_input_data
+from mylibs.forlogs.Logger import get_log_to_file
+from mylibs.result_creation import catch_error
 from datetime import date
 
 AOuthData = get_input_data("Data.txt")
@@ -19,7 +19,6 @@ class User():
         self.id = user_id
 
     def init_user(self, infodict):
-        # self.id = infodict['id']
         self.firs_name = infodict['first_name']
         self.last_name = infodict['last_name']
         self.sex = infodict['sex']
@@ -89,9 +88,8 @@ class VKperson():
             'count': count_set,
             'status': 6,
             'fields': 'photo_id, country, city, sex, deactivated, is_closed',
-                                   #deactivated = содержит значение deleted или banned.
-            'v': 5.89
-        }
+            'v': 5.89}
+
         answer = requests.get(url=self.URL_to_search, params=self.parametrs_to_search)
         JSONanswer = answer.json()
 
@@ -129,8 +127,8 @@ class Photo():
             'photo_sizes': 1,
             'count': 1000,
             'access_token': token,
-            'v': 5.89
-        }
+            'v': 5.89}
+
         parameters_for_photos_get['owner_id'] = VKperson.id
 
         answer = requests.get(url = URL_for_get_photos, params = parameters_for_photos_get)
@@ -158,7 +156,6 @@ def write_msg(vk, user_id, message, attachment = None):
 
 
 def send_set(vk, user_id, person):
-
     message = 'Если вам нравится кондидат, введите "+", иначе введите "-":',
     attachment = []
     for photo in person.list_photos:
